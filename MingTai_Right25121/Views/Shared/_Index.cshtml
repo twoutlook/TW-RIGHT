@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+@using Resources;
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <script>
+        var $JSLanguage = {
+        Loadingtext: "@Lang.JS_Loadingtext",//数据加载中，请稍后…
+        XTCK: "@Lang.JS_XTCK",//系统窗口
+        XTTS: "@Lang.JS_XTTS",//系统提示
+        ZZTJSJ: "@Lang.JS_ZZTJSJ",//正在提交数据...
+        QDSC: "@Lang.JS_QDSC",//注：您确定要删除该项数据吗？
+        ZZSC: "@Lang.JS_ZZSC",//正在删除数据...
+        BtnConfirm: "@Lang.JS_BtnConfirm",//确认
+        BtnClose: "@Lang.JS_BtnClose",//关闭
+        BtnQuXiao: "@Lang.JS_BtnQuXiao" //取消
+        };
+    </script>
+
+    <link href="~/Content/css/framework-font.css" rel="stylesheet" />
+    <link href="~/Content/css/framework-theme.css?v=2020010702" rel="stylesheet" />
+    <script src="~/Content/js/jquery/jquery-2.1.1.min.js"></script>
+    <script src="~/Content/js/bootstrap/bootstrap.js"></script>
+    <link href="~/Content/js/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Content/js/jqgrid/jqgrid.min.js"></script>
+    <link href="~/Content/js/jqgrid/jqgrid.css" rel="stylesheet" />
+    <script src="~/Content/js/jqgrid/grid.locale-cn.js"></script>
+    <link href="~/Content/css/framework-ui.css?v=20200107" rel="stylesheet" />
+    <script src="~/Content/js/framework-ui.js"></script>
+
+    <script>
+        $(function () {
+            $(window).resize(function () {
+                var itTree = document.getElementById("itemTree");
+                if (itTree != null) {
+                    $("#gridList").setGridWidth($(window).width() - 220);
+                }
+                else {
+                    $("#gridList").setGridWidth($(window).width()-6);
+                }
+                $("#gridList").setGridHeight($(window).height() - 128);
+            });
+        });
+    </script>
+</head>
+<body>
+    @RenderBody()
+    @Html.AntiForgeryToken()
+</body>
+</html>

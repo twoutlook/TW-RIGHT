@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script>
+    $(function () {
+        $('#layout').layout();
+        treeView();
+        gridList();
+    });
+    function treeView() {
+        $("#itemTree").treeview({
+            url: "/RightManage/Authority/GetRoleTreeJson",
+            onnodeclick: function (item) {
+                $("#txt_keyword").val('');
+                $("#F_Type").val("");
+                $('#btn_search').trigger("click");
+            }
+        });
+    }
+    
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/RightManage/Authority/GetRoleFunctionGridJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: '主键', name: 'F_Id', hidden: true },
+                { label: '功能点编号', name: 'F_FunctionCode', width: 180, align: 'center' },
+                { label: '功能点名称', name: 'F_FunctionName', width: 180, align: 'center' },
+                { label: '功能类型', name: 'F_Type', width: 180, align: 'center' },
+                { label: '模块', name: 'F_ModelName', width: 180, align: 'center' },
+                { label: '功能点描述', name: 'F_Description', width: 200, align: 'left' }
+            ],
+            pager: "#gridPager",
+            sortname: 'F_FunctionCode asc',
+            viewrecords: true,
+            postData: {
+                RoleId:""
+            }
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: {
+                    keyword: $("#txt_keyword").val(),
+                    RoleId: $("#itemTree").getCurrentNode().id,
+                    fuctype: $("#F_Type").val()
+                }
+            }).trigger('reloadGrid');
+        });
+    }
+
+    function btn_add() {
+        
+        var dd = $("#itemTree").getCurrentNode();
+        if (dd == null || dd == "undefined") {
+            return false;
+        }
+        //for (i in dd) {
+        //    alert(i);           //获得属性 
+        //    alert(dd[i]);  //获得属性值
+
+        //}
+        if ($("#itemTree").getCurrentNode().parentnodes == "0") {
+            return false;
+        }
+        var itemId = $("#itemTree").getCurrentNode().id;
+        $.modalOpen({
+            id: "RoleFunctionAdd",
+            title: "权限管理 》角色功能点管理 》添加功能点到角色",//添加功能点
+            url: "/RightManage/Authority/RoleFunctionAdd?keyValue=" + itemId,//keyValue=角色ID
+            width: "850px",
+            height: "750px",
+            btn:null,
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    function btn_delete() {
+        $.deleteForm({
+            url: "/RightManage/Authority/DeleteRoleFunction",
+            param: { keyValue: $("#gridList").jqGridRowValue().F_Id },
+            success: function () {
+                $("#gridList").resetSelection();
+                $("#gridList").trigger("reloadGrid");
+                $("#btnClose").trigger("click");
+            }
+        })
+    }
+
+    function btn_cpoyrole() {
+        var dd = $("#itemTree").getCurrentNode();
+        if (dd == null || dd == "undefined") {
+            return false;
+        }
+        if ($("#itemTree").getCurrentNode().parentnodes == "0") {
+            return false;
+        }
+        var itemId = $("#itemTree").getCurrentNode().id;
+        $.modalOpen({
+            id: "RoleFunctionAdd",
+            title: "权限管理 》角色功能点管理 》复制其他角色权限",//添加功能点
+            url: "/RightManage/Authority/RoleFunctionCopy?keyValue=" + itemId,//keyValue=角色ID
+            width: "650px",
+            height: "450px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+
+</script>
+<div class="ui-layout" id="layout" style="height: 100%; width: 100%;">
+    <div class="ui-layout-west">
+        <div id="itemTree"></div>
+    </div>
+    <div class="ui-layout-center">
+        <div class="topPanel">
+            <div class="toolbar">
+                <div class="btn-group">
+                    <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+                <div class="btn-group">
+                    <a id="NF-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus"></i>添加功能点 </a>
+                    
+                    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a id="NF-itemstype" authorize="yes" onclick="btn_cpoyrole()" href="javascript:void()">复制其他角色权限</a></li>
+                    </ul>
+                </div>
+                <div class="operate">
+                    <ul class="nav nav-pills">
+                        <li class="first">@Resources.Lang.Org_Index_YiXuanZhong <span>1</span>@Resources.Lang.Org_Index_Xiang </li> @*已选中*@ @*项*@
+                        <li><a id="NF-delete" authorize="yes" onclick="btn_delete()"><i class="fa fa-trash-o"></i> 删除功能点</a></li> @*删除功能点*@
+                    </ul>
+                    <a href="javascript:;" class="close" id="btnClose"></a>
+                </div>
+                <script>$('.toolbar').authorizeButton()</script>
+            </div>
+            <div class="search">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="input-group" style="margin-right:20px;">
+                                <select id="F_Type" name="F_Type" class="form-control">
+                                    <option value ="">==功能类型==</option>
+                                    <option value ="menu">菜单</option>
+                                    <option value ="button">按钮</option>
+                                    <option value ="bussiness">业务</option>
+                                 </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <input id="txt_keyword" type="text" class="form-control" placeholder="@Resources.Lang.Org_Index_BianHaoMingCheng" style="width: 200px;">@*名称/编号*@
+                                <span class="input-group-btn">
+                                    <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="gridPanel">
+            <table id="gridList"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+</div>

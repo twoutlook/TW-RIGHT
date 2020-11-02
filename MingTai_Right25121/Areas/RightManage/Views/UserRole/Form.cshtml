@@ -1,0 +1,207 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+@using Resources;
+
+<style>
+    .tdList
+    {
+        width:43%;
+        padding-left:10px;
+    }
+    .tdMid
+    {
+        width:14%;
+        padding-left:3px;
+        text-align:center;
+        /*padding-top:60px;*/
+    }
+</style>
+<script>
+    var UId = $.request("UId"); //UId=用户的GUID
+
+    $(function () {
+        gridListLeft();
+        gridListRight();
+    })
+
+    function gridListLeft() {
+        var $gridListLeft = $("#gridListLeft");
+        $gridListLeft.dataGrid({
+            height: $(window).height() - 128,
+            colModel: [
+                { label: '主键', name: 'F_Id', hidden: true },
+                {
+                    label: "@Lang.Base_Xuanze", name: "F_Id", width: 50, align: 'center',//选择
+                    formatter: function (cellvalue, options, rowObject) {
+                        return "<input type ='checkbox' name ='checkItemLeft' value = '" + cellvalue + "' />";
+                    }
+                },
+                { label: '@Lang.Base_JueSeBianHao', name: 'F_RoleCode', width: 150, align: 'left' },//角色编号
+                { label: '@Lang.Base_JueSeMingCheng', name: 'F_RoleName', width: 150, align: 'left' }//角色名称
+            ],
+            sortname: 'F_RoleCode asc ',
+            viewrecords: true
+        });
+        $("#btn_searchLeft").click(function () {
+            $gridListLeft.jqGrid('setGridParam', {
+                url: "/RightManage/UserRole/GetGridJson",
+                postData: { "uId": UId, "hasRole": "false" },
+            }).trigger('reloadGrid');
+        });
+    }
+
+    function gridListRight() {
+        var $gridListRight = $("#gridListRight");
+        $gridListRight.dataGrid({
+            height: $(window).height() - 128,
+            colModel: [
+                { label: '主键', name: 'F_Id', hidden: true },
+                {
+                    label: "@Lang.Base_Xuanze", name: "F_Id", width: 50, align: 'center',//选择
+                    formatter: function (cellvalue, options, rowObject) {
+                        return "<input type ='checkbox' name ='checkItemRight' value = '" + cellvalue + "' />";
+                    }
+                },
+                { label: '@Lang.Base_JueSeBianHao', name: 'F_RoleCode', width: 150, align: 'left' },//角色编号
+                { label: '@Lang.Base_JueSeMingCheng', name: 'F_RoleName', width: 150, align: 'left' }//角色名称
+            ],
+            sortname: 'F_RoleCode asc ',
+            viewrecords: true
+        });
+        $("#btn_searchRight").click(function () {
+            $gridListRight.jqGrid('setGridParam', {
+                url: "/RightManage/UserRole/GetGridJson",
+                postData: { "uId": UId, "hasRole": "true" },
+            }).trigger('reloadGrid');
+        });
+    }
+
+    function AddRole()
+    {
+        var selectIds = "";
+        $("#gridListLeft").find("input[type='checkbox']").each(function () {
+            if ($(this).is(':checked')) {
+                if (selectIds.length == 0) {
+                    selectIds = $(this).val();
+                } else {
+                    selectIds = selectIds + "," + $(this).val();
+                }
+            }
+        });
+        if (selectIds.length == 0) {
+            $.modalAlert("@Lang.Base_Qxzytjdjs", "warning");//请选择要添加的角色！
+            return false;
+        }
+        var msg = "";
+        $.ajax({
+            url: "/RightManage/UserRole/AddUserRole",
+            data: { uId: UId, roleList: selectIds },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                msg = data;
+                $.modalAlert(data.message, "success");
+            },
+            error: function (data) {
+                msg = data.responseText;
+            }
+        });
+        btnQuery();
+    }
+
+    function DeleteRole() {
+        var selectIds = "";
+        $("#gridListRight").find("input[type='checkbox']").each(function () {
+            if ($(this).is(':checked')) {
+                if (selectIds.length == 0) {
+                    selectIds = $(this).val();
+                } else {
+                    selectIds = selectIds + "," + $(this).val();
+                }
+            }
+        });
+        if (selectIds.length == 0) {
+            $.modalAlert("@Lang.Base_Qxzyscdjs", "warning");//请选择要删除的角色
+            return false;
+        }
+        var msg = "";
+        $.ajax({
+            url: "/RightManage/UserRole/DeleteUserRole",
+            data: { uId: UId, roleList: selectIds },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                msg = data;
+                $.modalAlert(data.message, "success");
+            },
+            error: function (data) {
+                msg = data.responseText;
+            }
+        });
+        btnQuery();
+    }
+
+
+</script>
+
+
+<form id="form1">
+    <div style="padding-top: 20px; margin-right: 20px;">
+        <div style="display:none;">
+            <button id="btn_searchLeft" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+            <button id="btn_searchRight" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+        </div>
+        <table class="form">
+            <tr>
+                <td class="tdList">
+                    <div class="panel panel-danger" id="divLeft">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">@Lang.Base_Wtjdjs</h3>@*未添加的角色*@
+                        </div>
+                        <div class="panel-body">
+                            <div class="gridPanel">
+                                <table id="gridListLeft"></table>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td class="tdMid">
+                    <div class="panel panel-default" ID="divMid">
+                        <div class="panel-body">
+                            <br/><br/>
+                            <input type="button" class="btn btn-success" value="@Lang.Base_Xzjs>>" onclick="AddRole()" />@*新增角色*@
+                            <br/><br/>
+                            <input type="button" class="btn btn-danger" value="<<@Lang.Base_Scjs" onclick="DeleteRole()" />@*删除角色*@
+                        </div>
+                    </div>
+                </td>
+                <td class="tdList">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">@Lang.Base_Ytjdjs</h3>@*已添加的角色*@
+                        </div>
+                        <div class="panel-body">
+                            <div class="gridPanel">
+                                <table id="gridListRight"></table>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        $(document).ready(function () {
+            setTimeout(btnQuery, 1000);   //延迟查询数据 
+        })
+        function btnQuery() {
+            $('#btn_searchLeft').click();
+            $('#btn_searchRight').click();
+            var w = $("#divLeft").width();
+            var h = $("#divLeft").height();
+            $("#divMid").height(h);
+        }
+    </script>
+</form>

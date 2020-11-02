@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+@using Resources;
+
+<script>
+
+    $(function () {
+        gridList();
+    });
+
+    function gridList() {
+        var $gridList = $("#gridList");
+        
+        $gridList.dataGrid({
+            url: "/RightManage/Module/GetGridJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: '主键', name: 'F_Id', hidden: true },
+                { label: '@Lang.Base_MoKuaiBianMa', name: 'F_ModelCode', width: 180, align: 'left' },//模块编号
+                { label: '@Lang.Base_MoKuaiMingCheng', name: 'F_ModelName', width: 180, align: 'left' },//模块名称
+                { label: '@Lang.Base_NoFrom', name: 'F_FunctionNoFrom', width: 180, align: 'left' },//开始功能点编号
+                { label: '@Lang.Base_NoTo	', name: 'F_FunctionNoTo', width: 180, align: 'left' },//结束功能点编号
+                {
+                    label: '@Lang.Base_SuoShuXiangMu', name: 'F_ProjectId', width: 150, align: 'left',//所属项目
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == null || cellvalue == undefined || cellvalue == "") {
+                            return "";
+                        }
+                        return top.rightClients.project[cellvalue] == null ? "" : top.rightClients.project[cellvalue].fullname;
+                    }
+                },
+                {
+                    label: '@Lang.Base_GongSi', name: 'F_CompanyId', width: 150, align: 'left',//公司
+                    formatter: function (cellvalue, options, rowObject)
+                    {
+                        if (cellvalue == null || cellvalue == undefined || cellvalue == "") {
+                            return "";
+                        }
+                        return top.rightClients.organize[cellvalue] == null ? "" : top.rightClients.organize[cellvalue].fullname;
+                    }
+                },
+                {
+                    label: '@Lang.Base_ChuangJianShiJian', name: 'F_CreatorTime', width: 80, align: 'left',//创建时间
+                    formatter: "date", formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
+                },
+                { label: '@Lang.Base_BeiZhu', name: 'F_Description', width: 200, align: 'left' }//备注
+            ],
+            pager: "#gridPager",
+            sortname: 'F_CompanyId asc,F_ProjectId asc,F_SortCode asc',
+            viewrecords: true
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: { keyword: $("#txt_keyword").val() },
+            }).trigger('reloadGrid');
+        });
+    }
+    function btn_add() {
+        $.modalOpen({
+            id: "Form_add_Module",
+            title: "@Lang.Base_XinZengMoKuai",//新增模块
+            url: "/RightManage/Module/Form?op=add&F_Id=",
+            width: "700px",
+            height: "510px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+                $("#aclose").trigger("click");
+            }
+        });
+    }
+    function btn_edit() {
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        $.modalOpen({
+            id: "Form_modify_Module",
+            title: "@Lang.Base_XiuGaiMoKuai",//修改模块
+            url: "/RightManage/Module/Form?op=edit&F_Id=" + keyValue,
+            width: "700px",
+            height: "510px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+                $("#aclose").trigger("click");
+            }
+        });
+    }
+    function btn_delete() {
+
+        var moduleId = $("#gridList").jqGridRowValue().F_Id;
+        $.ajax({
+            url: "/RightManage/Module/CheckRelationFunciton",
+            data: { "moduleId": moduleId },
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                msg = data;
+            },
+            error: function (data) {
+                msg = data.responseText;
+            }
+        });
+
+        //模块已经与功能点做关联，不可以删除
+        if (msg != null && msg != undefined && msg != "") {
+            $.modalAlert('' + msg, 'warning');
+            return false;
+        }
+
+        $.deleteForm({
+            url: "/RightManage/Module/DeleteForm",
+            param: { keyValue: $("#gridList").jqGridRowValue().F_Id },
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+                $("#aclose").trigger("click");
+            }
+        })
+    }
+    function btn_details() {
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        $.modalOpen({
+            id: "Form_Module_Details",
+            title: "@Lang.Base_ChaKanMoKuai",//查看模块
+            url: "/RightManage/Module/Form?op=edit&F_Id=" + keyValue,
+            width: "700px",
+            height: "550px",
+            btn: null,
+        });
+    }
+
+
+
+</script>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+        </div>
+        <div class="btn-group">
+            <a id="NF-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus"></i>@Lang.Base_XinZengMoKuai</a>@*新建模块*@
+        </div>
+        <div class="operate">
+            <ul class="nav nav-pills">
+                <li class="first">@Lang.Org_Index_YiXuanZhong<span>1</span>@Lang.Org_Index_Xiang</li>@*已选中 项*@
+                <li><a id="NF-edit" authorize="yes" onclick="btn_edit()"><i class="fa fa-pencil-square-o"></i>@Lang.Base_XiuGaiMoKuai</a></li>@*修改模块*@
+                <li><a id="NF-delete" authorize="yes" onclick="btn_delete()"><i class="fa fa-trash-o"></i>@Lang.Base_ShanChuMoKuai</a></li>@*删除模块*@
+                <li><a id="NF-Details" authorize="yes" onclick="btn_details()"><i class="fa fa-search-plus"></i>@Lang.Base_ChaKanMoKuai</a></li>@*查看模块*@
+            </ul>
+            <a href="javascript:;" class="close" id="aclose"></a>
+        </div>
+        <script>$('.toolbar').authorizeButton()</script>
+    </div>
+    <div class="search">
+        <table>
+            <tr>
+                <td>
+                    <div class="input-group">
+                        <input id="txt_keyword" type="text" class="form-control" placeholder="@Lang.Base_Mkbmmkmc" style="width: 200px;">@*模块编码/模块名称*@
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="gridPanel">
+    <table id="gridList"></table>
+    <div id="gridPager"></div>
+</div>

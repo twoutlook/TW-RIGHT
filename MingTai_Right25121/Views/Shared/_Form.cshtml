@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+@using Resources;
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+
+
+    <link href="~/Content/css/framework-font.css" rel="stylesheet" />
+    <link href="~/Content/css/framework-theme.css?v=2020010702" rel="stylesheet" />
+    <script src="~/Content/js/jquery/jquery-2.1.1.min.js"></script>
+    <script src="~/Content/js/bootstrap/bootstrap.js"></script>
+    <link href="~/Content/js/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Content/js/wdtree/tree.js"></script>
+    <link href="~/Content/js/wdtree/tree.css" rel="stylesheet" />
+    <link href="~/Content/js/select2/select2.min.css" rel="stylesheet" />
+    <script src="~/Content/js/select2/select2.min.js"></script>
+    <link href="~/Content/js/wizard/wizard.css" rel="stylesheet" />
+    <script src="~/Content/js/wizard/wizard.js"></script>
+    <script src="~/Content/js/validate/jquery.validate.min.js"></script>
+    <script src="~/Content/js/datepicker/WdatePicker.js"></script>
+    <link href="~/Content/css/framework-ui.css" rel="stylesheet" />
+    <script src="~/Content/js/framework-ui.js"></script>
+</head>
+<body>
+    @RenderBody()
+    @Html.AntiForgeryToken()
+
+
+        <script>
+            var $JSLanguage = {
+                Loadingtext: "@Lang.JS_Loadingtext",//数据加载中，请稍后…
+            XTCK: "@Lang.JS_XTCK",//系统窗口
+            XTTS: "@Lang.JS_XTTS",//系统提示
+            ZZTJSJ: "@Lang.JS_ZZTJSJ",//正在提交数据...
+            QDSC: "@Lang.JS_QDSC",//注：您确定要删除该项数据吗？
+            ZZSC: "@Lang.JS_ZZSC",//正在删除数据...
+            BtnConfirm: "@Lang.JS_BtnConfirm",//确认
+            BtnClose: "@Lang.JS_BtnClose",//关闭
+            BtnQuXiao: "@Lang.JS_BtnQuXiao" //取消
+        };
+  </script>
+
+</body>
+</html>

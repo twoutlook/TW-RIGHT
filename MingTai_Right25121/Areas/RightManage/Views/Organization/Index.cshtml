@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script>
+    $(function () {
+        $('#layout').layout();
+        treeView();
+        gridList();
+    });
+    function treeView() {
+        $("#itemTree").treeview({
+            url: "/RightManage/Organization/GetTreeJson",
+            onnodeclick: function (item) {
+                $("#txt_keyword").val('');
+                $('#btn_search').trigger("click");
+                $("#aclose").trigger("click");
+            }
+        });
+    }
+    
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            height: $(window).height() - 96,
+            colModel: [
+                { label: "主键", name: "F_Id", hidden: true, key: true },
+                { label: "@Resources.Lang.Org_Index_CengJi", name: "F_Layers", hidden: true },//层级
+                { label: '@Resources.Lang.Org_Index_MingCheng', name: 'F_ORGANIZATIONNAME', width: 150, align: 'left' },//名称
+                { label: '@Resources.Lang.Org_Index_BianHao', name: 'F_ORGANIZATIONNO', width: 150, align: 'left' },//编号
+                { label: '@Resources.Lang.Org_Index_PaiXu', name: 'F_SortCode', width: 80, align: 'center' },//排序
+                {
+                    label: '@Resources.Lang.Org_Index_ChuangJianShiJian', name: 'F_CreatorTime', width: 80, align: 'left',//创建时间
+                    formatter: "date", formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
+                },
+                //{
+                //    label: "有效", name: "F_EnabledMark", width: 60, align: "center",
+                //    formatter: function (cellvalue) {
+                //        return cellvalue == true ? "<i class=\"fa fa-toggle-on\"></i>" : "<i class=\"fa fa-toggle-off\"></i>";
+                //    }
+                //},
+                { label: "@Resources.Lang.Org_Index_BeiZhu", name: "F_Description", index: "F_Description", width: 200, align: "left", sortable: false }//备注
+            ]
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                url: "/RightManage/Organization/GetGridJson",
+                postData: { itemId: $("#itemTree").getCurrentNode().id, keyword: $("#txt_keyword").val() },
+            }).trigger('reloadGrid');
+        });
+    }
+    function btn_add() {
+        var itemId = $("#itemTree").getCurrentNode().id;
+        var itemName = $("#itemTree").getCurrentNode().text;
+        if (!itemId) {
+            return false;
+        }
+        $.modalOpen({
+            id: "Form_Organization_Add",
+            title: itemName + " 》@Resources.Lang.Org_Index_XinZhenZuZhi",//新增组织
+            url: "/RightManage/Organization/Form?ParentId=" + itemId,
+            width: "450px",
+            height: "350px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+                document.getElementById("itemTree").innerHTML = "";
+                treeView();
+            }
+        });
+    }
+    function btn_edit() {
+        var ParentId = $("#itemTree").getCurrentNode().id;
+        var itemName = $("#itemTree").getCurrentNode().text;
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        $.modalOpen({
+            id: "Form_Organization_Edit",
+            title: itemName + " 》@Resources.Lang.Org_Index_XiuGaiZuZhi",//修改组织
+            url: "/RightManage/Organization/Form?keyValue=" + keyValue + "&ParentId=" + ParentId,
+            width: "450px",
+            height: "350px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+                $("#aclose").trigger("click");
+            }
+        });
+    }
+    function btn_delete() {
+        $.deleteForm({
+            url: "/RightManage/Organization/DeleteForm",
+            param: { keyValue: $("#gridList").jqGridRowValue().F_Id },
+            success: function () {
+                $("#gridList").resetSelection();
+                $("#gridList").trigger("reloadGrid");
+                document.getElementById("itemTree").innerHTML = "";
+                treeView();
+                $("#aclose").trigger("click");
+            }
+        })
+    }
+    function btn_details() {
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        $.modalOpen({
+            id: "_Organization_Details",
+            title: "@Resources.Lang.Org_Index_ChaKanZuZhi",//查看组织
+            url: "/RightManage/Organization/Form?keyValue=" + keyValue,
+            width: "450px",
+            height: "470px",
+            btn: null,
+        });
+    }
+    
+</script>
+<div class="ui-layout" id="layout" style="height: 100%; width: 100%;">
+    <div class="ui-layout-west">
+        <div id="itemTree"></div>
+    </div>
+    <div class="ui-layout-center">
+        <div class="topPanel">
+            <div class="toolbar">
+                <div class="btn-group">
+                    <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+                <div class="btn-group">
+                    <a id="NF-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus"></i>@Resources.Lang.Org_Index_XinZhenZuZhi </a>@*新增组织*@
+                    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                    @*<ul class="dropdown-menu pull-right">
+                        <li><a id="NF-itemstype" authorize="yes" onclick="btn_itemstype()" href="javascript:void()">分类管理</a></li>
+                    </ul>*@
+                </div>
+                <div class="operate">
+                    <ul class="nav nav-pills">
+                        <li class="first">@Resources.Lang.Org_Index_YiXuanZhong <span>1</span>@Resources.Lang.Org_Index_Xiang </li> @*已选中*@ @*项*@
+                        <li><a id="NF-edit" authorize="yes" onclick="btn_edit()"><i class="fa fa-pencil-square-o"></i>@Resources.Lang.Org_Index_XiuGaiZuZhi</a></li> @*修改组织*@
+                        <li><a id="NF-delete" authorize="yes" onclick="btn_delete()"><i class="fa fa-trash-o"></i> @Resources.Lang.Org_Index_ShanChuZuZhi</a></li> @*删除组织*@
+                        <li><a id="NF-Details" authorize="yes" onclick="btn_details()"><i class="fa fa-search-plus"></i>@Resources.Lang.Org_Index_ChaKanZuZhi </a></li> @*查看组织*@
+                    </ul>
+                    <a href="javascript:;" class="close" id="aclose"></a>
+                </div>
+                <script>$('.toolbar').authorizeButton()</script>
+            </div>
+            <div class="search">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="input-group">
+                                <input id="txt_keyword" type="text" class="form-control" placeholder="@Resources.Lang.Org_Index_BianHaoMingCheng" style="width: 200px;">@*名称/编号*@
+                                <span class="input-group-btn">
+                                    <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="gridPanel">
+            <table id="gridList"></table>
+        </div>
+    </div>
+</div>

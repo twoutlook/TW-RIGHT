@@ -1,0 +1,132 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style>
+    #gridList td {
+        vertical-align:middle;
+    }
+</style>
+<script>
+    var keyValue = $.request("keyValue");
+    $(function () {
+        gridList();
+    })
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/RightManage/Authority/GetFucsGridJson",
+            height: $(window).height() - 96,
+            colModel: [
+                { label: "主键", name: "F_Id", hidden: true, key: true },
+                { label: '功能编号', name: 'F_FunctionCode', width: 70, align: 'center' },
+                { label: '功能名称', name: 'F_FunctionName', width: 200, align: 'left' },
+                { label: '功能类型', name: 'F_Type', width: 70, align: 'center' },
+                {
+                    label: '模块', name: 'F_ModelId', width: 120, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return top.rightClients.datamodels[cellvalue] == null ? "" : top.rightClients.datamodels[cellvalue].fullname;
+                    }
+                },
+
+                { label: '备注', name: 'F_Description', width: 200, align: 'left' }
+            ],
+            sortname: 'F_FunctionCode asc',
+            viewrecords: true,
+            multiselect: true,//显示checkbox
+            rowNum: -1,//不分页           
+            postData: {
+                RoleId: keyValue
+            }
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: {
+                    keyword: $("#txt_keyword").val(),
+                    RoleId: keyValue,
+                    fuctype: $("#F_Type").val()
+                }
+            }).trigger('reloadGrid');
+        });
+    }
+    function btn_add() {
+        var selectIds = "";
+
+        //$("#gridList").find("input[type='checkbox']").each(function () {
+        //    if ($(this).is(':checked')) {
+        //        if (selectIds.length == 0) {
+        //            selectIds = $(this).val();
+        //        } else {
+        //            selectIds = selectIds + "," + $(this).val();
+        //        }
+        //    }
+        //});
+
+        var rowData = $("#gridList").jqGrid('getGridParam', 'selarrrow');
+        if (rowData.length) {
+            for (var i = 0; i < rowData.length; i++) {
+                var fid = $("#gridList").jqGrid('getCell', rowData[i], 'F_Id');//name是colModel中的一属性
+                if (selectIds.length == 0) {
+                    selectIds = fid;
+                } else {
+                    selectIds = selectIds + "," + fid;
+                }
+            }
+        }
+
+        if (selectIds.length == 0) {
+            $.modalAlert("请选择要添加的功能点！", "warning");
+            return false;
+        }
+
+        $.submitForm({
+            url: "/RightManage/Authority/SaveRoleFunctions?keyValue=" + keyValue,
+            param: { funcIds: selectIds },
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+                $.currentWindow().$("#btnClose").trigger("click");
+            }
+        });
+    }
+
+
+</script>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+        </div>
+        <div class="btn-group">
+            <a id="NF-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus"></i>添加到角色</a>
+        </div>
+        <script>$('.toolbar').authorizeButton()</script>
+    </div>
+    <div class="search">
+        <table>
+            <tr>
+                <td>
+                    <div class="input-group" style="margin-right: 20px;">
+                        <select id="F_Type" name="F_Type" class="form-control">
+                            <option value="">==功能类型==</option>
+                            <option value="menu">菜单</option>
+                            <option value="button">按钮</option>
+                            <option value="bussiness">业务</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <input id="txt_keyword" type="text" class="form-control" placeholder="请输入要查询关键字" style="width: 200px;">
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="gridPanel">
+    <table id="gridList"></table>
+</div>

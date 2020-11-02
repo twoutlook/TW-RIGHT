@@ -1,0 +1,157 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<style>
+    #gridList td {
+        vertical-align:middle;
+    }
+</style>
+<script>
+    $(function () {
+        $('#layout').layout();
+        treeView();
+        gridList();
+    });
+    function treeView() {
+        $("#itemTree").treeview({
+            url: "/RightManage/Deploy/GetProjectTreeJson",
+            onnodeclick: function (item) {
+                $("#txt_keyword").val('');
+                $('#btn_search').trigger("click");
+                $("#btnClose").trigger("click");
+            }
+        });
+    }
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/RightManage/Deploy/GetSingleButtonGridJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: "主键", name: "F_Id", hidden: true, key: true },
+                { label: '按钮编号', name: 'F_Code', width: 120, align: 'left' },
+                { label: '按钮名称', name: 'F_Name', width: 120, align: 'left' },
+                { label: '作用页面', name: 'F_Data', width: 300, align: 'left' },
+                { label: '归属菜单', name: 'F_ParentName', width: 130, align: 'center' },
+                { label: '功能点编号', name: 'F_FunctionCode', width: 70, align: 'center' },
+                {
+                    label: "有效", name: "F_Status", width: 60, align: "center",
+                    formatter: function (cellvalue) {
+                        return cellvalue == 1 ? "<i class=\"fa fa-toggle-on\"></i>" : "<i class=\"fa fa-toggle-off\"></i>";
+                    }
+                },
+                { label: '备注', name: 'F_Description', width: 200, align: 'left' }
+            ],
+            postData: {
+                peojectId: ""
+            },
+            pager: "#gridPager",
+            sortname: 'F_FunctionCode asc',
+            viewrecords: true,
+            multiselect: true,//显示checkbox
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: { 
+                    keyword: $("#txt_keyword").val(),
+                    peojectId: $("#itemTree").getCurrentNode().id
+                },
+            }).trigger('reloadGrid');
+        });
+    }
+
+    function btn_delete() {
+        var selectIds = "";
+        var rowData = $("#gridList").jqGrid('getGridParam', 'selarrrow');
+        if (rowData.length) {
+            for (var i = 0; i < rowData.length; i++) {
+                var fid = $("#gridList").jqGrid('getCell', rowData[i], 'F_Id');//name是colModel中的一属性
+                if (selectIds.length == 0) {
+                    selectIds = fid;
+                } else {
+                    selectIds = selectIds + "," + fid;
+                }
+            }
+        }
+
+        if (selectIds.length == 0) {
+            $.modalAlert("请选择要删除的按钮！", "warning");
+            return false;
+        }
+
+        $.deleteForm({
+            url: "/RightManage/Deploy/DeleteSingleButtons",
+            param: { btnIds: selectIds },
+            success: function () {
+                $("#gridList").resetSelection();
+                $("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+
+    function btn_export() {
+        var dd = $("#itemTree").getCurrentNode();
+        if (dd == null || dd == "undefined") {
+            $.modalAlert("请选择一个项目！", "warning");
+            return false;
+        }
+        if ($("#itemTree").getCurrentNode().parentnodes == "0") {
+            $.modalAlert("请选择一个项目！", "warning");
+            return false;
+        }
+        var itemId = $("#itemTree").getCurrentNode().id;
+        $.modalOpen({
+            id: "SingleButtonExport",
+            title: "导入按钮",
+            url: "/RightManage/Deploy/SingleButtonExport?projectId=" + itemId,
+            width: "400px",
+            height: "150px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+
+</script>
+<div class="ui-layout" id="layout" style="height: 100%; width: 100%;">
+    <div class="ui-layout-west">
+        <div id="itemTree"></div>
+    </div>
+    <div class="ui-layout-center">
+        <div class="topPanel">
+            <div class="toolbar">
+                <div class="btn-group">
+                    <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+                <div class="btn-group">
+                    <a id="NF-Delete" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_delete()"><i class="fa fa-trash-o"></i>批量删除</a>
+                    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a id="NF-Export" authorize="yes"  onclick="btn_export()" href="javascript:void()"><i class="fa fa-plus"></i>批量导入</a></li>
+                        <li><a id="NF-Down" authorize="yes" href="/ExcelTemplate/SingleButtonTemplete.xls"><i class="fa fa-plus"></i>模版下载</a></li>
+                    </ul>            
+                </div>
+                <script>$('.toolbar').authorizeButton()</script>
+            </div>
+            <div class="search">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="input-group">
+                                <input id="txt_keyword" type="text" class="form-control" placeholder="@Resources.Lang.Org_Index_BianHaoMingCheng" style="width: 200px;">@*名称/编号*@
+                                <span class="input-group-btn">
+                                    <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="gridPanel">
+            <table id="gridList"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+</div>
