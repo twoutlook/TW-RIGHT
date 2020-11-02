@@ -1,0 +1,213 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutIndex.cshtml";
+}
+<script>
+    $(function () {
+        $('#layout').layout();
+        treeView();
+        gridList();
+    })
+    function treeView() {
+        $("#itemTree").treeview({
+            url: "/RightManage/Deploy/GetProjectTreeJson",
+            onnodeclick: function (item) {
+                //for (i in item) {
+                //    alert(i);           //获得属性 
+                //    alert(item[i]);  //获得属性值
+
+                //}
+                $("#F_ModelId").empty();
+                $("#F_ModelId").append("<option value=''>==模块==</option>");
+                $("#txt_keyword").val('');
+                if (item.parentnodes != '0') {
+                    $("#F_ModelId").bindSelect({
+                        url: "/RightManage/Common/GetModelJson",
+                        param: { projectId: item.id }
+                    });
+                }
+                $("#F_Type").val("");
+                $("#btn_search").trigger("click");
+                $("#btnClose").trigger("click");
+            }
+        });
+    }
+    function gridList() {
+        var $gridList = $("#gridList");
+        $gridList.dataGrid({
+            url: "/RightManage/Authority/GetFucPointGridJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: "主键", name: "F_Id", hidden: true, key: true },
+                { label: '功能编号', name: 'F_FunctionCode', width: 200, align: 'left' },
+                { label: '功能名称', name: 'F_FunctionName', width: 260, align: 'left' },
+                { label: '功能类型', name: 'F_Type', width: 260, align: 'center'},
+                {
+                    label: '模块', name: 'F_ModelId', width: 120, align: 'center',
+                    formatter: function (cellvalue, options, rowObject) {
+                        return top.rightClients.datamodels[cellvalue] == null ? "" : top.rightClients.datamodels[cellvalue].fullname;
+                    }
+                },
+                {
+                    label: "是否有效", name: "F_Status", width: 70, align: "center",
+                    formatter: function (cellvalue) {
+                        return cellvalue == 1 ? "<i class=\"fa fa-toggle-on\"></i>" : "<i class=\"fa fa-toggle-off\"></i>";
+                    }
+                },
+                { label: '介绍', name: 'F_Description', width: 300, align: 'left' }
+            ],
+            postData: {
+                projectId: ""
+            },
+            pager: "#gridPager",
+            sortname: 'F_FunctionCode asc',
+            viewrecords: true
+        });
+        $("#btn_search").click(function () {
+            var project = "";
+            var currentPrj = $("#itemTree").getCurrentNode();
+            if (currentPrj == null || currentPrj == "undefined") {
+
+            } else {
+                if (currentPrj.parentnodes != "0") {
+                    project = currentPrj.id;
+                }
+            }
+            $gridList.jqGrid('setGridParam', {
+                postData: {
+                    keyword: $("#txt_keyword").val(),
+                    projectId: project,
+                    fuctype: $("#F_Type").val(),
+                    modelid: $("#F_ModelId").val()
+                },
+            }).trigger('reloadGrid');
+        });
+    }
+    function btn_add() {
+        var currentPrjId = "";
+        var currentPrj = $("#itemTree").getCurrentNode();
+        if (currentPrj == null || currentPrj == "undefined") {
+
+        } else {
+            if (currentPrj.parentnodes != "0") {
+                currentPrjId = currentPrj.id;
+            }
+        }
+        if (currentPrjId.length > 0) {
+            $.modalOpen({
+                id: "Form",
+                title: "新增功能点",
+                url: "/RightManage/Authority/FucPointEdit?projectId=" + currentPrjId,
+                width: "550px",
+                height: "440px",
+                callBack: function (iframeId) {
+                    top.frames[iframeId].submitForm();
+                }
+            });
+        } else {
+            $.modalAlert("请先选择一个项目！", "warning");
+        }
+    }
+    function btn_edit() {
+        var currentPrjId = $("#itemTree").getCurrentNode().id;
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        $.modalOpen({
+            id: "Form",
+            title: "修改功能点",
+            url: "/RightManage/Authority/FucPointEdit?keyValue=" + keyValue + "&projectId=" + currentPrjId,
+            width: "550px",
+            height: "440px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+            }
+        });
+    }
+    function btn_delete() {
+        $.deleteForm({
+            url: "/RightManage/Authority/DeleteFucPoint",
+            param: { keyValue: $("#gridList").jqGridRowValue().F_Id },
+            success: function () {
+                $("#gridList").resetSelection();
+                $("#gridList").trigger("reloadGrid");
+                $("#btnClose").trigger("click");
+            }
+        })
+    }
+    function btn_details() {
+        var currentPrjId = $("#itemTree").getCurrentNode().id;
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        $.modalOpen({
+            id: "Details",
+            title: "查看功能点",
+            url: "/RightManage/Authority/FucPointDetail?keyValue=" + keyValue + "&projectId=" + currentPrjId,
+            width: "700px",
+            height: "490px",
+            btn: null,
+        });
+    }
+</script>
+
+<div class="ui-layout" id="layout" style="height: 100%; width: 100%;">
+    <div class="ui-layout-west">
+        <div id="itemTree"></div>
+    </div>
+    <div class="ui-layout-center">
+
+        <div class="topPanel">
+            <div class="toolbar">
+                <div class="btn-group">
+                    <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+                </div>
+                <div class="btn-group">
+                    <a id="NF-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus"></i>新建功能点</a>
+                </div>
+                <div class="operate">
+                    <ul class="nav nav-pills">
+                        <li class="first">已选中<span>1</span>项</li>
+                        <li><a id="NF-edit" authorize="yes" onclick="btn_edit()"><i class="fa fa-pencil-square-o"></i>修改功能点</a></li>
+                        <li><a id="NF-delete" authorize="yes" onclick="btn_delete()"><i class="fa fa-trash-o"></i>删除功能点</a></li>
+                        <li><a id="NF-Details" authorize="yes" onclick="btn_details()"><i class="fa fa-search-plus"></i>查看功能点</a></li>
+                    </ul>
+                    <a href="javascript:;" class="close" id="btnClose"></a>
+                </div>
+                <script>$('.toolbar').authorizeButton()</script>
+            </div>
+            <div class="search">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="input-group" style="margin-right:20px;">
+                                <select id="F_ModelId" name="F_ModelId" class="form-control">
+                                    <option value ="">==模块==</option>
+                                 </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group" style="margin-right:20px;">
+                                <select id="F_Type" name="F_Type" class="form-control">
+                                    <option value ="">==功能类型==</option>
+                                    <option value ="menu">菜单</option>
+                                    <option value ="button">按钮</option>
+                                    <option value ="bussiness">业务</option>
+                                 </select>
+                            </div>
+                        </td>
+                        <td>
+                            
+                            <div class="input-group">
+                                <input id="txt_keyword" type="text" class="form-control" placeholder="请输入要查询关键字" style="width: 200px;">
+                                <span class="input-group-btn">
+                                    <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="gridPanel">
+            <table id="gridList"></table>
+            <div id="gridPager"></div>
+        </div>
+    </div>
+</div>

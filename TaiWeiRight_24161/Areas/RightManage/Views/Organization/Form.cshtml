@@ -1,0 +1,142 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script>
+    var keyValue = $.request("keyValue");//左侧TREE的组织ID
+    var ParentId = $.request("ParentId");
+    var orgNO = null;
+    var layers = null;
+
+    if (ParentId != null && ParentId != undefined && ParentId.length > 0) {
+        $.ajax({
+            url: "/RightManage/Organization/GetLayerFromParentId",
+            data: { parentId: ParentId },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                layers = data;
+            }
+        });
+    }
+
+    $(function () {
+        if (!!keyValue) {
+            $.ajax({
+                url: "/RightManage/Organization/GetFormJson",
+                data: { keyValue: keyValue },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#form1").formSerialize(data);
+                    orgNO = $("#F_ORGANIZATIONNO").val();
+                    if (keyValue != null && keyValue != undefined && keyValue.length > 0) {
+                        $("#F_ORGANIZATIONNO").attr('disabled', 'disabled');
+                    }
+                    
+                }
+            });
+        }
+    });
+    function submitForm() {
+        if (!$('#form1').formValid()) {
+            return false;
+        }
+        var msg = "";
+        if (keyValue == "" || keyValue == undefined)
+        {
+            orgNO = $("#F_ORGANIZATIONNO").val();
+            $.ajax({
+                url: "/RightManage/Organization/CheckExistsOrgNo",
+                data: { orgNO: orgNO, parentId: ParentId },
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    msg = data;
+                },
+                error: function (data) {
+                    msg = data.responseText;
+                }
+            });
+
+            if (msg != null && msg != undefined && msg != "") {
+                $.modalAlert(''+msg, 'warning');
+                //alert(msg);
+                return false;
+            }
+        }
+
+        var num = parseInt(layers);
+        if (num>8)
+        {
+            $.modalAlert('@Resources.Lang.Base_Zuzjgcjbndy', 'warning');//组织结构层级不能大于6层!
+            return false;
+        }
+        //alert(layers);
+        if (isNaN(num))
+        {
+            $.modalAlert('@Resources.Lang.Base_FuJieDianYouCuoWu', 'warning');//父节点有错误!
+            return false;
+        }
+
+        var postData = $("#form1").formSerialize();
+        postData["F_ParentId"] = ParentId;
+        postData["F_Layers"] = layers;
+        if (orgNO != null && orgNO != undefined && orgNO.length > 0)
+        {
+            postData["F_ORGANIZATIONNO"] = orgNO;
+        }
+        $.submitForm({
+            url: "/RightManage/Organization/SubmitForm?keyValue=" + keyValue,
+            param: postData,
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+            }
+        })
+    }
+    
+</script>
+
+<form id="form1">
+    <div style="padding-top: 20px; margin-right: 20px;">
+        <table class="form">
+            <tr>
+                <th class="formTitle">@Resources.Lang.Org_Form_MingCheng</th>@*名称*@
+                <td class="formValue">
+                    <input id="F_ORGANIZATIONNAME" name="F_ORGANIZATIONNAME" type="text" class="form-control required" placeholder="@Resources.Lang.Org_Form_QingShuRuMingCheng" />@*请输入名称*@
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">@Resources.Lang.Org_Form_BianHao</th>@*编号*@
+                <td class="formValue">
+                    <input id="F_ORGANIZATIONNO" name="F_ORGANIZATIONNO" type="text" class="form-control required" placeholder="@Resources.Lang.Org_Form_QingShuRuBianHao"/>@*请输入编号*@
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">@Resources.Lang.Org_Form_PaiXu</th>@*排序*@
+                <td class="formValue">
+                    <input id="F_SortCode" name="F_SortCode" type="text" class="form-control required" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" maxlength="20" />
+                </td>
+            </tr>
+           @* <tr>
+                <th class="formTitle" style="height: 35px;">选项</th>
+                <td class="formValue" style="padding-top: 1px;">
+                    <div class="ckbox">
+                        <input id="F_IsDefault" name="F_IsDefault" type="checkbox"><label for="F_IsDefault">默认</label>
+                    </div>
+                    <div class="ckbox">
+                        <input id="F_EnabledMark" name="F_EnabledMark" type="checkbox" checked="checked"><label for="F_EnabledMark">有效</label>
+                    </div>
+                </td>
+            </tr>*@
+            <tr>
+                <th class="formTitle" valign="top" style="padding-top: 5px;">@Resources.Lang.Org_Form_BeiZhu
+                </th>
+                @*备注*@
+                <td class="formValue">
+                    <textarea id="F_Description" name="F_Description" class="form-control" style="height: 60px;"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

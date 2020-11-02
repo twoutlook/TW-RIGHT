@@ -1,0 +1,688 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Org_Index_BeiZhu" xml:space="preserve">
+    <value>备注</value>
+    <comment>备注</comment>
+  </data>
+  <data name="Org_Index_BianHao" xml:space="preserve">
+    <value>编号</value>
+    <comment>编号</comment>
+  </data>
+  <data name="Org_Index_CengJi" xml:space="preserve">
+    <value>层级</value>
+    <comment>层级</comment>
+  </data>
+  <data name="Org_Index_ChuangJianShiJian" xml:space="preserve">
+    <value>创建时间</value>
+    <comment>创建时间</comment>
+  </data>
+  <data name="Org_Index_MingCheng" xml:space="preserve">
+    <value>名称</value>
+    <comment>名称</comment>
+  </data>
+  <data name="Org_Index_PaiXu" xml:space="preserve">
+    <value>排序</value>
+    <comment>排序</comment>
+  </data>
+  <data name="Org_Form_BeiZhu" xml:space="preserve">
+    <value>备注</value>
+    <comment>备注</comment>
+  </data>
+  <data name="Org_Form_BianHao" xml:space="preserve">
+    <value>编号</value>
+    <comment>编号</comment>
+  </data>
+  <data name="Org_Form_MingCheng" xml:space="preserve">
+    <value>名称</value>
+    <comment>名称</comment>
+  </data>
+  <data name="Org_Form_PaiXu" xml:space="preserve">
+    <value>排序</value>
+    <comment>排序</comment>
+  </data>
+  <data name="Org_Form_QingShuRuBianHao" xml:space="preserve">
+    <value>请输入编号</value>
+    <comment>请输入编号</comment>
+  </data>
+  <data name="Org_Form_QingShuRuMingCheng" xml:space="preserve">
+    <value>请输入名称</value>
+    <comment>请输入名称</comment>
+  </data>
+  <data name="Org_Index_BianHaoMingCheng" xml:space="preserve">
+    <value>名称/编号</value>
+    <comment>名称/编号</comment>
+  </data>
+  <data name="Org_Index_ChaKanZuZhi" xml:space="preserve">
+    <value>查看组织</value>
+    <comment>查看组织</comment>
+  </data>
+  <data name="Org_Index_ShanChuZuZhi" xml:space="preserve">
+    <value>删除组织</value>
+    <comment>删除组织</comment>
+  </data>
+  <data name="Org_Index_Xiang" xml:space="preserve">
+    <value>项</value>
+    <comment>项</comment>
+  </data>
+  <data name="Org_Index_XinZhenZuZhi" xml:space="preserve">
+    <value>新增组织</value>
+    <comment>新增组织</comment>
+  </data>
+  <data name="Org_Index_XiuGaiZuZhi" xml:space="preserve">
+    <value>修改组织</value>
+    <comment>修改组织</comment>
+  </data>
+  <data name="Org_Index_YiXuanZhong" xml:space="preserve">
+    <value>已选中</value>
+    <comment>已选中</comment>
+  </data>
+  <data name="Org_ZuZhiBianHaoYiCunZai" xml:space="preserve">
+    <value>组织编号已存在</value>
+    <comment>组织编号已存在</comment>
+  </data>
+  <data name="OrgUser_Index_BuMen" xml:space="preserve">
+    <value>部门</value>
+    <comment>部门</comment>
+  </data>
+  <data name="OrgUser_Index_GongSi" xml:space="preserve">
+    <value>公司</value>
+    <comment>公司</comment>
+  </data>
+  <data name="OrgUser_Index_JuDian" xml:space="preserve">
+    <value>据点</value>
+    <comment>据点</comment>
+  </data>
+  <data name="OrgUser_Index_LianXiDianHua" xml:space="preserve">
+    <value>联系电话</value>
+    <comment>联系电话</comment>
+  </data>
+  <data name="OrgUser_Index_MiMa" xml:space="preserve">
+    <value>密码</value>
+    <comment>密码</comment>
+  </data>
+  <data name="OrgUser_Index_ShouJi" xml:space="preserve">
+    <value>手机</value>
+    <comment>手机</comment>
+  </data>
+  <data name="OrgUser_Index_XingBie" xml:space="preserve">
+    <value>性别</value>
+    <comment>性别</comment>
+  </data>
+  <data name="OrgUser_Index_YongHuBianHao" xml:space="preserve">
+    <value>用户编号</value>
+    <comment>用户编号</comment>
+  </data>
+  <data name="OrgUser_Index_YongHuMingCheng" xml:space="preserve">
+    <value>用户名称</value>
+    <comment>用户名称</comment>
+  </data>
+  <data name="OrgUser_Index_YouXiang" xml:space="preserve">
+    <value>邮箱</value>
+    <comment>邮箱</comment>
+  </data>
+  <data name="OrgUser_Index_ZuZhi" xml:space="preserve">
+    <value>组织</value>
+    <comment>组织</comment>
+  </data>
+  <data name="OrgUser_Index_ChaKanYongHu" xml:space="preserve">
+    <value>查看用户</value>
+    <comment>查看用户</comment>
+  </data>
+  <data name="OrgUser_Index_ShanChuYongHu" xml:space="preserve">
+    <value>删除用户</value>
+    <comment>删除用户</comment>
+  </data>
+  <data name="OrgUser_Index_XinZengYongHu" xml:space="preserve">
+    <value>新增用户</value>
+    <comment>新增用户</comment>
+  </data>
+  <data name="OrgUser_Index_XiuGaiYongHu" xml:space="preserve">
+    <value>修改用户</value>
+    <comment>修改用户</comment>
+  </data>
+  <data name="BaseUser_BaseInfo" xml:space="preserve">
+    <value>基本信息</value>
+    <comment>基本信息</comment>
+  </data>
+  <data name="BaseUser_MiMa" xml:space="preserve">
+    <value>密码</value>
+    <comment>密码</comment>
+  </data>
+  <data name="BaseUser_QingShuRuMiMa" xml:space="preserve">
+    <value>请输入密码</value>
+    <comment>请输入密码</comment>
+  </data>
+  <data name="BaseUser_QingShuRuZhangHao" xml:space="preserve">
+    <value>请输入账号</value>
+    <comment>请输入账号</comment>
+  </data>
+  <data name="BaseUser_ZhangHao" xml:space="preserve">
+    <value>账号</value>
+    <comment>账号</comment>
+  </data>
+  <data name="Base_BeiZhu" xml:space="preserve">
+    <value>备注</value>
+    <comment>备注</comment>
+  </data>
+  <data name="Base_BuMen" xml:space="preserve">
+    <value>部门</value>
+    <comment>部门</comment>
+  </data>
+  <data name="Base_ChaKanMoKuai" xml:space="preserve">
+    <value>查看模块</value>
+    <comment>查看模块</comment>
+  </data>
+  <data name="Base_ChongZhiMima" xml:space="preserve">
+    <value>重置密码</value>
+    <comment>重置密码</comment>
+  </data>
+  <data name="Base_ChuangJianShiJian" xml:space="preserve">
+    <value>创建时间</value>
+    <comment>创建时间</comment>
+  </data>
+  <data name="Base_DianHua" xml:space="preserve">
+    <value>电话</value>
+    <comment>电话</comment>
+  </data>
+  <data name="Base_Fou" xml:space="preserve">
+    <value>否</value>
+    <comment>否</comment>
+  </data>
+  <data name="Base_FuJieDianYouCuoWu" xml:space="preserve">
+    <value>父节点有错误!</value>
+    <comment>父节点有错误!</comment>
+  </data>
+  <data name="Base_GongSi" xml:space="preserve">
+    <value>公司</value>
+    <comment>公司</comment>
+  </data>
+  <data name="Base_JieShuGongnengdianbianhao" xml:space="preserve">
+    <value>结束功能点编号</value>
+    <comment>结束功能点编号</comment>
+  </data>
+  <data name="Base_JinYong" xml:space="preserve">
+    <value>禁用</value>
+    <comment>禁用</comment>
+  </data>
+  <data name="Base_JinYongGaiZhangHu" xml:space="preserve">
+    <value>注：您确定要【禁用】该项账户吗？</value>
+    <comment>注：您确定要【禁用】该项账户吗？</comment>
+  </data>
+  <data name="Base_Jsgndbhcdbxdy" xml:space="preserve">
+    <value>结束功能点编号长度必须大于等于6位</value>
+    <comment>结束功能点编号长度必须大于等于6位</comment>
+  </data>
+  <data name="Base_KaiShiGongnengdianbianhao" xml:space="preserve">
+    <value>开始功能点编号</value>
+    <comment>开始功能点编号</comment>
+  </data>
+  <data name="Base_Ksgndbhcdbxdy" xml:space="preserve">
+    <value>开始功能点编号长度必须大于等于6位</value>
+    <comment>开始功能点编号长度必须大于等于6位</comment>
+  </data>
+  <data name="Base_Mkbmmkmc" xml:space="preserve">
+    <value>模块编码/模块名称</value>
+    <comment>模块编码/模块名称</comment>
+  </data>
+  <data name="Base_MoKuaiBianMa" xml:space="preserve">
+    <value>模块编码</value>
+    <comment>模块编码</comment>
+  </data>
+  <data name="Base_MoKuaiMingCheng" xml:space="preserve">
+    <value>模块名称</value>
+    <comment>模块名称</comment>
+  </data>
+  <data name="Base_Nan" xml:space="preserve">
+    <value>男</value>
+    <comment>男</comment>
+  </data>
+  <data name="Base_Nv" xml:space="preserve">
+    <value>女</value>
+    <comment>女</comment>
+  </data>
+  <data name="Base_PaiXu" xml:space="preserve">
+    <value>排序</value>
+    <comment>排序</comment>
+  </data>
+  <data name="Base_QingShuRuXingMing" xml:space="preserve">
+    <value>请输入姓名</value>
+    <comment>请输入姓名</comment>
+  </data>
+  <data name="Base_QingXuanZe" xml:space="preserve">
+    <value>==请选择==</value>
+    <comment>==请选择==</comment>
+  </data>
+  <data name="Base_QinShuRuMoKuaiBianMa" xml:space="preserve">
+    <value>请输入模块编码</value>
+    <comment>请输入模块编码</comment>
+  </data>
+  <data name="Base_QinShuRuMoKuaiMingCheng" xml:space="preserve">
+    <value>请输入模块名称</value>
+    <comment>请输入模块名称</comment>
+  </data>
+  <data name="Base_QiYong" xml:space="preserve">
+    <value>启用</value>
+    <comment>启用</comment>
+  </data>
+  <data name="Base_QiYongGaiZhangHu" xml:space="preserve">
+    <value>注：您确定要【启用】该项账户吗？</value>
+    <comment>注：您确定要【启用】该项账户吗？</comment>
+  </data>
+  <data name="Base_ShanChuMoKuai" xml:space="preserve">
+    <value>删除模块</value>
+    <comment>删除模块</comment>
+  </data>
+  <data name="Base_ShengRi" xml:space="preserve">
+    <value>生日</value>
+    <comment>生日</comment>
+  </data>
+  <data name="Base_Shi" xml:space="preserve">
+    <value>是</value>
+    <comment>是</comment>
+  </data>
+  <data name="Base_ShouJi" xml:space="preserve">
+    <value>手机</value>
+    <comment>手机</comment>
+  </data>
+  <data name="Base_SuoShuXiangMu" xml:space="preserve">
+    <value>所属项目</value>
+    <comment>所属项目</comment>
+  </data>
+  <data name="Base_TianJiaJueSe" xml:space="preserve">
+    <value>添加角色</value>
+    <comment>添加角色</comment>
+  </data>
+  <data name="Base_XiangMu" xml:space="preserve">
+    <value>项目</value>
+    <comment>项目</comment>
+  </data>
+  <data name="Base_XingBie" xml:space="preserve">
+    <value>性别</value>
+    <comment>性别</comment>
+  </data>
+  <data name="Base_XingMing" xml:space="preserve">
+    <value>姓名</value>
+    <comment>姓名</comment>
+  </data>
+  <data name="Base_XinZengMoKuai" xml:space="preserve">
+    <value>新建模块</value>
+    <comment>新建模块</comment>
+  </data>
+  <data name="Base_XiuGaiMoKuai" xml:space="preserve">
+    <value>修改模块</value>
+    <comment>修改模块</comment>
+  </data>
+  <data name="Base_YouXiang" xml:space="preserve">
+    <value>邮箱</value>
+    <comment>邮箱</comment>
+  </data>
+  <data name="Base_YunXuDengLu" xml:space="preserve">
+    <value>允许登录</value>
+    <comment>允许登录</comment>
+  </data>
+  <data name="Base_ZhangHaoXingMing" xml:space="preserve">
+    <value>账户/姓名</value>
+    <comment>账户/姓名</comment>
+  </data>
+  <data name="Base_ZhengChang" xml:space="preserve">
+    <value>正常</value>
+    <comment>正常</comment>
+  </data>
+  <data name="Base_Zuzjgcjbndy" xml:space="preserve">
+    <value>组织结构层级不能大于6层!</value>
+    <comment>组织结构层级不能大于6层!</comment>
+  </data>
+  <data name="Base_JueSeBianHao" xml:space="preserve">
+    <value>角色编号</value>
+    <comment>角色编号</comment>
+  </data>
+  <data name="Base_JueSeMingCheng" xml:space="preserve">
+    <value>角色名称</value>
+    <comment>角色名称</comment>
+  </data>
+  <data name="Base_Qxzyscdjs" xml:space="preserve">
+    <value>请选择要删除的角色！</value>
+    <comment>请选择要删除的角色！</comment>
+  </data>
+  <data name="Base_Qxzytjdjs" xml:space="preserve">
+    <value>请选择要添加的角色！</value>
+    <comment>请选择要添加的角色！</comment>
+  </data>
+  <data name="Base_Scjs" xml:space="preserve">
+    <value>删除角色</value>
+    <comment>删除角色</comment>
+  </data>
+  <data name="Base_Wtjdjs" xml:space="preserve">
+    <value>未添加的角色</value>
+    <comment>未添加的角色</comment>
+  </data>
+  <data name="Base_Xuanze" xml:space="preserve">
+    <value>选择</value>
+    <comment>选择</comment>
+  </data>
+  <data name="Base_Xzjs" xml:space="preserve">
+    <value>新增角色</value>
+    <comment>新增角色</comment>
+  </data>
+  <data name="Base_Ytjdjs" xml:space="preserve">
+    <value>已添加的角色</value>
+    <comment>已添加的角色</comment>
+  </data>
+  <data name="BaseUser_MiMaBuZhengQue" xml:space="preserve">
+    <value>密码不正确，请重新输入</value>
+    <comment>密码不正确，请重新输入</comment>
+  </data>
+  <data name="BaseUser_ShanChuShiBai" xml:space="preserve">
+    <value>删除失败！</value>
+    <comment>删除失败！</comment>
+  </data>
+  <data name="BaseUser_ZhangHubczqcxsr" xml:space="preserve">
+    <value>账户不存在，请重新输入</value>
+    <comment>账户不存在，请重新输入</comment>
+  </data>
+  <data name="BaseUser_ZhangHubxtsdqlxgly" xml:space="preserve">
+    <value>账户被系统锁定,请联系管理员</value>
+    <comment>账户被系统锁定,请联系管理员</comment>
+  </data>
+  <data name="Base_ChongZhiMiMaChengGong" xml:space="preserve">
+    <value>重置密码成功。</value>
+    <comment>重置密码成功。</comment>
+  </data>
+  <data name="Base_ShanChuChengGong" xml:space="preserve">
+    <value>删除成功。</value>
+    <comment>删除成功。</comment>
+  </data>
+  <data name="Base_ZhangHuJinYongChenggong" xml:space="preserve">
+    <value>账户禁用成功。</value>
+    <comment>账户禁用成功。</comment>
+  </data>
+  <data name="Base_ZhangHuQiYongChengGong" xml:space="preserve">
+    <value>账户启用成功。</value>
+    <comment>账户启用成功。</comment>
+  </data>
+  <data name="BaseUser_MiMabzqqcxsr" xml:space="preserve">
+    <value>密码不正确，请重新输入</value>
+    <comment>密码不正确，请重新输入</comment>
+  </data>
+  <data name="Base_Org_Scsbczddxbhxjsj" xml:space="preserve">
+    <value>删除失败！操作的对象包含了下级数据。</value>
+    <comment>删除失败！操作的对象包含了下级数据。</comment>
+  </data>
+  <data name="BaseModule_Bmxbhrybksc" xml:space="preserve">
+    <value>部门下包含人员，不可以删除!</value>
+    <comment>部门下包含人员，不可以删除!</comment>
+  </data>
+  <data name="BaseModule_Gndyjgllcmkbnsc" xml:space="preserve">
+    <value>功能点已经关联了次模块，不能删除!</value>
+    <comment>功能点已经关联了次模块，不能删除!</comment>
+  </data>
+  <data name="Base_CaoZuoChengGong" xml:space="preserve">
+    <value>操作成功。</value>
+    <comment>操作成功。</comment>
+  </data>
+  <data name="Base_bkyxjadminzh" xml:space="preserve">
+    <value>不可以新建admin账号</value>
+    <comment>不可以新建admin账号</comment>
+  </data>
+  <data name="Base_Bmxbhrybkysc" xml:space="preserve">
+    <value>部门下包含人员，不可以删除!</value>
+    <comment>部门下包含人员，不可以删除!</comment>
+  </data>
+  <data name="Base_Bumenxuanzbuzhengque" xml:space="preserve">
+    <value>部门选择不正确!</value>
+    <comment>部门选择不正确!</comment>
+  </data>
+  <data name="Base_GSxzbzq" xml:space="preserve">
+    <value>公司选择不正确!</value>
+    <comment>公司选择不正确!</comment>
+  </data>
+  <data name="Base_TianJiaCG" xml:space="preserve">
+    <value>添加成功。</value>
+    <comment>添加成功。</comment>
+  </data>
+  <data name="Base_YongHuBianHaoYiCunZai" xml:space="preserve">
+    <value>用户编号已存在!</value>
+    <comment>用户编号已存在!</comment>
+  </data>
+  <data name="Login_denglu" xml:space="preserve">
+    <value>登录</value>
+    <comment>登录</comment>
+  </data>
+  <data name="Login_denglumima" xml:space="preserve">
+    <value>登录密码</value>
+    <comment>登录密码</comment>
+  </data>
+  <data name="Login_dlcgzztz" xml:space="preserve">
+    <value>登录成功，正在跳转...</value>
+    <comment>登录成功，正在跳转...</comment>
+  </data>
+  <data name="Login_gsbm" xml:space="preserve">
+    <value>公司编码</value>
+    <comment>公司编码</comment>
+  </data>
+  <data name="Login_Huanyiz" xml:space="preserve">
+    <value>换一张</value>
+    <comment>换一张</comment>
+  </data>
+  <data name="Login_kanbuqin" xml:space="preserve">
+    <value>看不清？</value>
+    <comment>看不清？</comment>
+  </data>
+  <data name="Login_ndzhyzqtdfdlqcxdl" xml:space="preserve">
+    <value>您的帐号已在其它地方登录,请重新登录</value>
+    <comment>您的帐号已在其它地方登录,请重新登录</comment>
+  </data>
+  <data name="Login_Qingshuruyonghum" xml:space="preserve">
+    <value>请输入用户名。</value>
+    <comment>请输入用户名。</comment>
+  </data>
+  <data name="Login_Qingsrdlmm" xml:space="preserve">
+    <value>请输入登录密码。</value>
+    <comment>请输入登录密码。</comment>
+  </data>
+  <data name="Login_Qingsrgsbm" xml:space="preserve">
+    <value>请输入公司编码。</value>
+    <comment>请输入公司编码。</comment>
+  </data>
+  <data name="Login_Qingsryzm" xml:space="preserve">
+    <value>请输入验证码。</value>
+    <comment>请输入验证码。</comment>
+  </data>
+  <data name="Login_qxglpt" xml:space="preserve">
+    <value>权限管理平台</value>
+    <comment>权限管理平台</comment>
+  </data>
+  <data name="Login_wmsqxglpt" xml:space="preserve">
+    <value>WMS权限管理平台</value>
+    <comment>WMS权限管理平台</comment>
+  </data>
+  <data name="Login_xtdlycsqcxdl" xml:space="preserve">
+    <value>系统登录已超时,请重新登录</value>
+    <comment>系统登录已超时,请重新登录</comment>
+  </data>
+  <data name="Login_xtwzcwqcxdl" xml:space="preserve">
+    <value>系统未知错误,请重新登录</value>
+    <comment>系统未知错误,请重新登录</comment>
+  </data>
+  <data name="Login_Yanzhengma" xml:space="preserve">
+    <value>验证码</value>
+    <comment>验证码</comment>
+  </data>
+  <data name="Login_YongHuMing" xml:space="preserve">
+    <value>用户名</value>
+    <comment>用户名</comment>
+  </data>
+  <data name="JS_BtnClose" xml:space="preserve">
+    <value>关闭</value>
+    <comment>关闭</comment>
+  </data>
+  <data name="JS_BtnConfirm" xml:space="preserve">
+    <value>确认</value>
+    <comment>确认</comment>
+  </data>
+  <data name="JS_BtnQuXiao" xml:space="preserve">
+    <value>取消</value>
+    <comment>取消</comment>
+  </data>
+  <data name="JS_Loadingtext" xml:space="preserve">
+    <value>数据加载中，请稍后…</value>
+    <comment>数据加载中，请稍后…</comment>
+  </data>
+  <data name="JS_QDSC" xml:space="preserve">
+    <value>注：您确定要删除该项数据吗？</value>
+    <comment>注：您确定要删除该项数据吗？</comment>
+  </data>
+  <data name="JS_XTCK" xml:space="preserve">
+    <value>系统窗口</value>
+    <comment>系统窗口</comment>
+  </data>
+  <data name="JS_XTTS" xml:space="preserve">
+    <value>系统提示</value>
+    <comment>系统提示</comment>
+  </data>
+  <data name="JS_ZZSC" xml:space="preserve">
+    <value>正在删除数据...</value>
+    <comment>正在删除数据...</comment>
+  </data>
+  <data name="JS_ZZTJSJ" xml:space="preserve">
+    <value>正在提交数据...</value>
+    <comment>正在提交数据...</comment>
+  </data>
+  <data name="Base_NoFrom" xml:space="preserve">
+    <value>结束功能点编号</value>
+    <comment>结束功能点编号</comment>
+  </data>
+  <data name="Base_NoTo" xml:space="preserve">
+    <value>开始功能点编号</value>
+    <comment>开始功能点编号</comment>
+  </data>
+  <data name="Base_FunctionType_Button" xml:space="preserve">
+    <value>按钮</value>
+    <comment>按钮</comment>
+  </data>
+  <data name="Base_FunctionType_Menu" xml:space="preserve">
+    <value>菜单</value>
+    <comment>菜单</comment>
+  </data>
+  <data name="Base_FunctionType_MenuGroup" xml:space="preserve">
+    <value>菜单组</value>
+    <comment>菜单组</comment>
+  </data>
+</root>

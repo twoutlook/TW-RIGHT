@@ -1,0 +1,246 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Index.cshtml";
+}
+@using Resources;
+
+<script>
+    var proleid = $.request("roleid");//角色
+    
+    $(function () {
+        gridList();
+        //alert("hello");
+    });
+
+    function gridList() {
+        var $gridList = $("#gridList");
+
+        
+        $gridList.dataGrid({
+            url: "/RightManage/BaseUser/GetGridJson",
+            height: $(window).height() - 128,
+            colModel: [
+                { label: '主键', name: 'F_Id', hidden: true },
+                { label: '@Lang.BaseUser_ZhangHao', name: 'F_UserId', width: 180, align: 'left' },//账号
+                { label: '@Lang.Base_XingMing', name: 'F_UserName', width: 180, align: 'left' },//姓名
+                {
+                    label: '@Lang.Base_XingBie', name: 'F_Gender', width: 60, align: 'center',//性别
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == true) {
+                            return '@Lang.Base_Nan';//男
+                        } else {
+                            return '@Lang.Base_Nv';//女
+                        }
+                    }
+                },
+                { label: '@Lang.Base_ShouJi', name: 'F_MobilePhone', width: 180, align: 'left' },//手机
+                { label: '@Lang.Base_DianHua', name: 'F_TelPhone', width: 180, align: 'left' },//电话
+                {
+                    label: '@Lang.OrgUser_Index_GongSi', name: 'F_CompanyId', width: 150, align: 'left',//公司
+                    formatter: function (cellvalue, options, rowObject) {
+                        return top.rightClients.organize[cellvalue] == null ? "" : top.rightClients.organize[cellvalue].fullname;
+                    }
+                },
+                {
+                    label: '@Lang.OrgUser_Index_BuMen', name: 'F_DepartmentId', width: 80, align: 'left',//部门
+                    formatter: function (cellvalue, options, rowObject) {
+                        return top.rightClients.organize[cellvalue] == null ? "" : top.rightClients.organize[cellvalue].fullname;
+                    }
+                },
+
+                {
+                    label: '@Lang.Org_Index_ChuangJianShiJian', name: 'F_CreatorTime', width: 80, align: 'left',//创建时间
+                    formatter: "date", formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' }
+                },
+                {
+                    label: "@Lang.Base_YunXuDengLu", name: "F_Status", width: 60, align: "center",//允许登录
+                    formatter: function (cellvalue, options, rowObject) {
+                        if (cellvalue == 0) {
+                            return '<span class=\"label label-success\">正常</span>';//正常
+                        } else if (cellvalue == 1) {
+                            return '<span class=\"label label-default\">禁用</span>';//禁用
+                        }
+                    }
+                },
+                { label: '@Lang.Base_BeiZhu', name: 'F_Description', width: 200, align: 'left' }//备注
+            ],
+            postData: {
+                roleid: proleid
+            },
+            pager: "#gridPager",
+            sortname: 'F_DepartmentId asc,F_CreatorTime desc',
+            viewrecords: true
+        });
+        $("#btn_search").click(function () {
+            $gridList.jqGrid('setGridParam', {
+                postData: { keyword: $("#txt_keyword").val() },
+            }).trigger('reloadGrid');
+        });
+    }
+    function btn_add() {
+        $.modalOpen({
+            id: "Form_add_user",
+            title: "@Lang.OrgUser_Index_XinZengYongHu",//新增用户
+            url: "/RightManage/BaseUser/Form?op=add",
+            width: "700px",
+            height: "510px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+                $("#aclose").trigger("click");
+            }
+        });
+    }
+    function btn_edit() {
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        $.modalOpen({
+            id: "Form_modify_user",
+            title: "@Lang.OrgUser_Index_XiuGaiYongHu",//修改用户
+            url: "/RightManage/BaseUser/Form?op=edit&F_Id=" + keyValue,
+            width: "700px",
+            height: "510px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+                $("#aclose").trigger("click");
+            }
+        });
+    }
+    function btn_delete() {
+        $.deleteForm({
+            url: "/RightManage/BaseUser/DeleteForm",
+            param: { keyValue: $("#gridList").jqGridRowValue().F_Id },
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+                $("#aclose").trigger("click");
+            }
+        })
+    }
+    function btn_details() {
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        $.modalOpen({
+            id: "Form_user_Details",
+            title: "@Lang.OrgUser_Index_ChaKanYongHu",//查看用户
+            url: "/RightManage/BaseUser/Form?op=edit&F_Id=" + keyValue,
+            width: "700px",
+            height: "550px",
+            btn: null,
+        });
+    }
+    function btn_revisepassword() {
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        var Account = $("#gridList").jqGridRowValue().F_UserId;
+        var RealName = $("#gridList").jqGridRowValue().F_UserName;
+
+        if (keyValue == undefined || keyValue=="")
+        {
+            return false;
+        }
+
+        $.modalOpen({
+            id: "Form_user_RevisePassword",
+            title: '@Lang.Base_ChongZhiMima',//重置密码
+            url: '/RightManage/BaseUser/RevisePassword?keyValue=' + keyValue + "&account=" + escape(Account) + '&realName=' + escape(RealName),
+            width: "450px",
+            height: "260px",
+            callBack: function (iframeId) {
+                top.frames[iframeId].submitForm();
+                $("#aclose").trigger("click");
+            }
+        });
+    }
+    function btn_disabled() {
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        if (keyValue == undefined || keyValue=="")
+        {
+            return false;
+        }
+        $.modalConfirm("@Lang.Base_JinYongGaiZhangHu", function (r) {//注：您确定要【禁用】该项账户吗？
+            if (r) {
+                $.submitForm({
+                    url: "/RightManage/BaseUser/DisabledAccount",
+                    param: { keyValue: keyValue },
+                    success: function () {
+                        $.currentWindow().$("#gridList").trigger("reloadGrid");
+                        $("#aclose").trigger("click");
+                    }
+                })
+            }
+        });
+    }
+    function btn_enabled() {
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        if (keyValue == undefined || keyValue=="")
+        {
+            return false;
+        }
+        $.modalConfirm("@Lang.Base_QiYongGaiZhangHu", function (r) {//注：您确定要【启用】该项账户吗？
+            if (r) {
+                $.submitForm({
+                    url: "/RightManage/BaseUser/EnabledAccount",
+                    param: { keyValue: keyValue },
+                    success: function () {
+                        $.currentWindow().$("#gridList").trigger("reloadGrid");
+                        $("#aclose").trigger("click");
+                    }
+                })
+            }
+        });
+    }
+    function btn_addRole()
+    {
+        var keyValue = $("#gridList").jqGridRowValue().F_Id;
+        $.modalOpen({
+            id: "Form_add_role_Details",
+            title: "@Lang.Base_TianJiaJueSe",//添加角色
+            url: "/RightManage/UserRole/Form?UId=" + keyValue,
+            width: "1100px",
+            height: "850px",
+            btn: null,
+        });
+    }
+</script>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" onclick="$.reload()"><span class="glyphicon glyphicon-refresh"></span></a>
+        </div>
+        <div class="btn-group">
+            <a id="NF-add" authorize="yes" class="btn btn-primary dropdown-text" onclick="btn_add()"><i class="fa fa-plus"></i>新建用户</a>@*新建用户*@
+        </div>
+        <div class="operate">
+            <ul class="nav nav-pills">
+                <li class="first">@Lang.Org_Index_YiXuanZhong<span>1</span>@Lang.Org_Index_Xiang</li>@*已选中 项*@
+                <li><a id="NF-edit" authorize="yes" onclick="btn_edit()"><i class="fa fa-pencil-square-o"></i>@Lang.OrgUser_Index_XiuGaiYongHu</a></li>@*修改用户*@
+                <li><a id="NF-delete" authorize="yes" onclick="btn_delete()"><i class="fa fa-trash-o"></i>@Lang.OrgUser_Index_ShanChuYongHu</a></li>@*删除用户*@
+                <li><a id="NF-Details" authorize="yes" onclick="btn_details()"><i class="fa fa-search-plus"></i>@Lang.OrgUser_Index_ChaKanYongHu</a></li>@*查看用户*@
+                <li class="split"></li>
+                <li><a id="NF-revisepassword" authorize="yes" onclick="btn_revisepassword()"><i class="fa fa-key"></i>@Lang.Base_ChongZhiMima</a></li>@*密码重置*@
+                <li class="split"></li>
+                <li><a id="NF-disabled" authorize="yes" onclick="btn_disabled()"><i class="fa fa-stop-circle"></i>@Lang.Base_JinYong</a></li>@*禁用*@
+                <li><a id="NF-enabled" authorize="yes" onclick="btn_enabled()"><i class="fa fa-play-circle"></i>@Lang.Base_QiYong</a></li>@*启用*@
+                <li class="split"></li>
+                <li><a id="NF-enabled" authorize="yes" onclick="btn_addRole()"><i class="fa fa-plus-circle"></i>@Lang.Base_TianJiaJueSe</a></li>@*添加角色*@
+            </ul>
+            <a href="javascript:;" class="close" id="aclose"></a>
+        </div>
+        <script>$('.toolbar').authorizeButton()</script>
+    </div>
+    <div class="search">
+        <table>
+            <tr>
+                <td>
+                    <div class="input-group">
+                        <input id="txt_keyword" type="text" class="form-control" placeholder="@Lang.Base_ZhangHaoXingMing" style="width: 200px;">@*账户/姓名/手机*@
+                        <span class="input-group-btn">
+                            <button id="btn_search" type="button" class="btn  btn-primary"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="gridPanel">
+    <table id="gridList"></table>
+    <div id="gridPager"></div>
+</div>

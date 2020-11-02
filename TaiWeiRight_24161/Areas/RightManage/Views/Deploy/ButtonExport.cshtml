@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<script>
+    var pProjectId = $.request("projectId");//项目id
+    var pMenuId = $.request("menuId");//菜单id
+
+    $(function () {
+        initControl();
+    });
+    function initControl() {
+    }
+    function submitForm() {
+        var formData = new FormData();
+        var filename = $("#file")[0].files[0];
+        if (filename == null || filename == "") {
+            $.modalAlert("请选择要导入的文件！", "warning");
+            return;
+        }
+        if (filename != null) {
+            formData.append('file', $("#file")[0].files[0]);
+            formData.append('projectId', pProjectId);
+            formData.append('menuId', pMenuId);
+            $.ajax({
+                type: "post",
+                url: "/RightManage/Deploy/ExcelToUpload",//"/文件名/控制器名/控制器内方法"
+                async: false,
+                contentType: false, //这个一定要写
+                processData: false, //这个也一定要写，不然会报错
+                data: formData,
+                dataType: 'json', //返回类型，有json，text，HTML。这里并没有jsonp格式，所以别妄想能用jsonp做跨域了。
+                success: function (data) {
+                    if (data.state == "success") {
+                        top.ButtonList.$("#gridList").resetSelection();
+                        top.ButtonList.$("#gridList").trigger("reloadGrid");
+                        $.modalAlert("上传成功！", "success");
+                        var index = parent.layer.getFrameIndex("ButtonExport");
+                        parent.layer.close(index); //执行关闭
+                    }
+                    else {
+                        $.modalAlert(data.message, "error");
+                        return data;
+                    }                
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown, data) {
+                    $.modalAlert(errorThrown, "error");
+                    return false;
+                }
+            });
+        }
+    }
+
+</script>
+<form id="form1">
+    <div style="margin-top: 10px; margin-left: 10px; margin-right: 10px;">
+        <div style="padding-top: 10px; margin-right: 30px;">
+            <table class="form">
+                <tr>
+                    <th class="formTitle">请选择Excel：</th>
+                    <td class="formValue">
+                        <input name="file" type="file" id="file" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,69 @@
+﻿@{
+    ViewBag.Title = "RightsAPI";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+
+@using Resources;
+<script>
+$(function () {     
+    //a();
+  //  menulist();
+    btnlist();
+    });
+function a() {
+    var layers = null;
+    $.ajax({
+        url: "/RightManage/RightsAPI/GetUserLoginJson", //?userno=N101 
+        type: 'post',
+        async: false,
+        data: { "userno": "X101" },
+        success: function (data) {
+            layers = data;
+            var a = JSON.parse(data);
+            alert("密码为：" + a[0].text);
+
+        }
+    });
+}
+    function menulist() {
+        var layers = null;
+        $.ajax({
+            url: "/RightManage/RightsAPI/GetMenuListByUserJson", //?userno=N101 
+            type: 'post',
+            async: false,
+            data:{"userno":"X101"},
+            success: function (data) {
+                layers = data;
+                var a = JSON.parse(data);
+                alert("密码为：" + a[0].F_Name);
+            
+            }
+        });    
+    }
+
+    function btnlist() {
+        var layers = null;
+        $.ajax({
+            url: "/RightManage/RightsAPI/GetBtnListByUserJson", //?userno=N101 
+            type: 'post',
+            async: false,
+            data: { "userno": "X101" },
+            success: function (data) {
+                layers = data;
+                var a = JSON.parse(data);
+                alert("密码为：" + a[0].F_Name);
+
+            }
+        });
+    }
+    
+    </script>
+
+<div class="topPanel">
+    <div class="toolbar">
+        <div class="btn-group">
+            <a class="btn btn-primary" ><span class="glyphicon glyphicon-refresh"></span></a>
+        </div>
+        </div>
+      
+    </div>

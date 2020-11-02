@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "Form";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+@using Resources;
+<script>
+    var op = $.request("op");// add or edit
+    var F_Id = $.request("F_Id");//F_Id=模块的GUID
+    var companyId = "@ViewBag.companyId";//获取当前人的公司GUID
+    var msg = "";
+
+    $(function () {
+        initControl();
+        if (op=='edit' || op=='details') {
+            $.ajax({
+                url: "/RightManage/Module/GetFormJson",
+                data: { F_Id: F_Id, "companyId": companyId },
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    $("#form1").formSerialize(data);
+                    $("#F_ModelCode").attr('disabled', 'disabled');
+                }
+            });
+        }
+    });
+    function initControl() {
+        //公司
+        $("#F_CompanyId").bindSelect({
+            url: "/RightManage/Organization/GetOrgTree",
+            param: { "layers": "3", "keyValue": companyId }
+        });
+        var keyValue = "";//不传值
+        $("#F_CompanyId").change(function () {
+            $("#F_ProjectId option").remove();
+            var compId = $(this).val();//公司ID
+            //项目
+            $("#F_ProjectId").bindSelect({
+                url: "/RightManage/Module/GetProject",
+                param: { "companyId": compId }
+            });
+        });
+    }
+
+    function submitForm() {
+        if (!$('#form1').formValid()) {
+            return false;
+        }
+        
+        if (F_Id == "" || F_Id == undefined)
+        {
+            var moduleNO = $("#F_ModelCode").val();
+            var compId = $("#F_CompanyId").val();
+            $.ajax({
+                url: "/RightManage/Module/CheckExistsNo",
+                data: { "companyId": compId, "moduleNO": moduleNO },
+                dataType: "text",
+                async: false,
+                success: function (data) {
+                    msg = data;
+                },
+                error: function (data) {
+                    msg = data.responseText;
+                }
+            });
+
+            //检查模块编号不能重复
+            if (msg != null && msg != undefined && msg != "") {
+                $.modalAlert('' + msg, 'warning');
+                //alert(msg);
+                return false;
+            }
+        }
+
+        var bnum = $("#F_FunctionNoFrom").val();
+        $.ajax({
+            url: "/RightManage/Module/CheckNumber",
+            data: { "num": bnum, "negative": "0", "zero": "0", "dec": "0" },
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                msg = data;
+            },
+            error: function (data) {
+                msg = data.responseText;
+            }
+        });
+        if (msg != null && msg != undefined && msg != "" && msg.length > 0)
+        {
+            $.modalAlert('@Lang.Base_KaiShiGongnengdianbianhao'+' : ' + msg, 'warning'); //开始功能点编号
+            return false;
+        }
+
+        var tnum = $("#F_FunctionNoTo").val();
+        $.ajax({
+            url: "/RightManage/Module/CheckNumber",
+            data: { "num": tnum, "negative": "0", "zero": "0", "dec": "0" },
+            dataType: "text",
+            async: false,
+            success: function (data) {
+                msg = data;
+            },
+            error: function (data) {
+                msg = data.responseText;
+            }
+        });
+        if (msg != null && msg != undefined && msg != "" && msg.length > 0) {
+            $.modalAlert('@Lang.Base_JieShuGongnengdianbianhao' + ': ' + msg, 'warning');//结束功能点编号
+            return false;
+        }
+
+        if (bnum.length < 6)
+        {
+            $.modalAlert('@Lang.Base_Ksgndbhcdbxdy', 'warning');//开始功能点编号长度必须大于6位
+            return false;
+        }
+        if (tnum.length < 6) {
+            $.modalAlert('@Lang.Base_Jsgndbhcdbxdy', 'warning');//结束功能点编号长度必须大于等于6位
+            return false;
+        }
+
+        var selCompanyId = $("#F_CompanyId").val();
+        $.submitForm({
+            url: "/RightManage/Module/SubmitForm?F_Id=" + F_Id + "&companyId=" + selCompanyId,
+            param: $("#form1").formSerialize(),
+            success: function () {
+                $.currentWindow().$("#gridList").trigger("reloadGrid");
+                $.currentWindow().$("#aclose").trigger("click");
+            }
+        })
+    }
+</script>
+
+<form id="form1">
+    <div style="padding-top: 20px; margin-right: 20px;">
+        <table class="form">
+            <tr>
+                <th class="formTitle">@Lang.Base_MoKuaiBianMa</th>@*模块编码*@
+                <td class="formValue">
+                    <input id="F_ModelCode" name="F_ModelCode" type="text" class="form-control required" placeholder="@Lang.Base_QinShuRuMoKuaiBianMa" />@*请输入模块编码*@
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">@Lang.Base_MoKuaiMingCheng</th>@*模块名称*@
+                <td class="formValue">
+                    <input id="F_ModelName" name="F_ModelName" type="text" class="form-control required" placeholder="@Lang.Base_QinShuRuMoKuaiMingCheng"/>@*请输入模块名称*@
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">@Lang.Base_GongSi</th>@*公司*@
+                <td class="formValue">
+                    <select id="F_CompanyId" name="F_CompanyId" class="form-control required">
+                        <option value="">@Lang.Base_QingXuanZe</option>@*==请选择==*@
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">@Lang.Base_XiangMu</th>@*项目*@
+                <td class="formValue">
+                    <select id="F_ProjectId" name="F_ProjectId" class="form-control required">
+                        <option value="">@Lang.Base_QingXuanZe</option>@*==请选择==*@
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">&nbsp;&nbsp; @Lang.Base_KaiShiGongnengdianbianhao</th>@*开始功能点编号*@
+                <td class="formValue">
+                    <input id="F_FunctionNoFrom" name="F_FunctionNoFrom" type="text" class="form-control required" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" maxlength="20" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">&nbsp;&nbsp; @Lang.Base_JieShuGongnengdianbianhao</th>@*结束功能点编号*@
+                <td class="formValue">
+                    <input id="F_FunctionNoTo" name="F_FunctionNoTo" type="text" class="form-control required" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" maxlength="20" />
+                </td>
+            </tr>
+            <tr>
+                <th class="formTitle">@Resources.Lang.Org_Form_PaiXu</th>@*排序*@
+                <td class="formValue">
+                    <input id="F_SortCode" name="F_SortCode" type="text" class="form-control required" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" maxlength="20" />
+                </td>
+            </tr>
+          
+            <tr>
+                <th class="formTitle" valign="top" style="padding-top: 5px;">@Resources.Lang.Org_Form_BeiZhu
+                </th>
+                @*备注*@
+                <td class="formValue">
+                    <textarea id="F_Description" name="F_Description" class="form-control" style="height: 60px;"></textarea>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

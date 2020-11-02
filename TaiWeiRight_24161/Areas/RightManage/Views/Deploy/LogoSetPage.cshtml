@@ -1,0 +1,157 @@
+﻿@{
+    ViewBag.Title = "LogoSetPage";
+    Layout = "~/Views/Shared/_Form.cshtml";
+}
+<style>
+    .panel-default {
+            border: none;
+            border-radius: 0px;
+            margin-bottom: 0px;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+        }
+
+            .panel-default > .panel-heading {
+                color: #777;
+                background-color: #fff;
+                border-color: #e6e6e6;
+                padding: 10px 10px;
+            }
+
+            .panel-default > .panel-body {
+                padding: 10px;
+                padding-bottom: 0px;
+            }
+
+                .panel-default > .panel-body ul {
+                    overflow: hidden;
+                    padding: 0;
+                    margin:0px;margin-top: -5px;
+                }
+
+                    .panel-default > .panel-body ul li {
+                        line-height: 27px;
+                        list-style-type: none;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+
+                        .panel-default > .panel-body ul li .time {
+                            color: #a1a1a1;
+                            float: right;
+                            padding-right: 5px;
+                        }
+</style>
+<script>
+
+    $(function () {
+        initControl();
+    });
+    function initControl() {
+    }
+    function uploadDefault() {
+        var formData = new FormData();
+        var filename = $("#fileDefault")[0].files[0];
+        if (filename == null || filename == "") {
+            $.modalAlert("请选择要上传的图片！", "warning");
+            return;
+        }
+        if (filename != null) {
+            formData.append('file', $("#fileDefault")[0].files[0]);
+            $.ajax({
+                type: "post",
+                url: "/RightManage/Deploy/UploadDefault",//"/文件名/控制器名/控制器内方法"
+                async: false,
+                contentType: false, //这个一定要写
+                processData: false, //这个也一定要写，不然会报错
+                data: formData,
+                dataType: 'json', //返回类型，有json，text，HTML。这里并没有jsonp格式，所以别妄想能用jsonp做跨域了。
+                success: function (data) {
+                    if (data.state == "success") {
+                        $("#logoDefault").attr("src", "../../Content/img/custom/default_Logo.png" + '?' + Math.random());
+                        $.modalAlert("上传成功！", "success");
+                    }
+                    else {
+                        $.modalAlert(data.message, "error");
+                    }                
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown, data) {
+                    $.modalAlert(errorThrown, "error");
+                }
+            });
+        }    
+    }
+
+    function uploadLogin() {
+        var formData = new FormData();
+        var filename = $("#fileLogin")[0].files[0];
+        if (filename == null || filename == "") {
+            $.modalAlert("请选择要上传的图片！", "warning");
+            return;
+        }
+        if (filename != null) {
+            formData.append('file', $("#fileLogin")[0].files[0]);
+            $.ajax({
+                type: "post",
+                url: "/RightManage/Deploy/UploadLogn",//"/文件名/控制器名/控制器内方法"
+                async: false,
+                contentType: false, //这个一定要写
+                processData: false, //这个也一定要写，不然会报错
+                data: formData,
+                dataType: 'json', //返回类型，有json，text，HTML。这里并没有jsonp格式，所以别妄想能用jsonp做跨域了。
+                success: function (data) {
+                    if (data.state == "success") {
+                        $("#logoLogin").attr("src", "../../Content/img/custom/login_Logo.png" + '?' + Math.random());
+                        $.modalAlert("上传成功！", "success");
+                    }
+                    else {
+                        $.modalAlert(data.message, "error");
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown, data) {
+                    $.modalAlert(errorThrown, "error");
+                }
+            });
+        }
+    }
+</script>
+<form id="form1">
+    <div class="panel panel-default">
+        <div class="panel-heading"><span style="font-weight:bolder;">logo设置</span>
+        </div>
+        <div class="panel-body" style="padding-bottom:20px;">
+            <div class="dashboard-stats" style="width:450px;border:solid 1px #e6e6e6; float:left;">
+                <div class="dashboard-stats-item">
+                     <h5 style="text-align:center;">框架页logo</h5>
+                     <div style="height:200px;text-align:center;vertical-align:middle;border-bottom:solid 1px #e6e6e6;border-top:solid 1px #e6e6e6; padding:15px;">
+                         <img id="logoDefault" src="~/Content/img/custom/default_Logo.png" onerror="this.onload = null; this.src='../../Content/img/right/in_logo.png';" style="width:300px;height:38px;" />
+                     </div>
+                     <div style="padding:10px;border-bottom:solid 1px #e6e6e6; color:red;">
+                         友情提示：建议图片高度为38px，宽度为300px,否则会拉伸！
+                     </div>
+                     <div style="padding:10px 10px 5px 10px; display:inline-block;width:100%;">
+                          <input name="file" type="file" id="fileDefault" style="float:left;" />
+                          <button type="button" id="btnUpLoadDefault" class="layui-layer-btn0 btn btn-primary" style="float:right;" onclick="uploadDefault();" >上传</button>
+                     </div>
+               </div>
+            </div>
+            
+            <div class="dashboard-stats" style="width:450px;border:solid 1px #e6e6e6; float:left; margin-left:15px;">
+                <div class="dashboard-stats-item">
+                     <h5 style="text-align:center;">登录页logo</h5>
+                     <div style="height:200px;text-align:center;vertical-align:middle;border-bottom:solid 1px #e6e6e6;border-top:solid 1px #e6e6e6; padding:15px;">
+                         <img id="logoLogin" src="~/Content/img/custom/login_Logo.png" onerror="this.onload = null; this.src='../../Content/img/right/top_logo.gif';" style="width:356px;height:87px;" />
+                     </div>
+                    <div style="padding:10px;border-bottom:solid 1px #e6e6e6; color:red;">
+                         友情提示：建议图片高度为87px，宽度为356px,否则会拉伸！
+                     </div>
+                     <div style="padding:10px 10px 5px 10px; display:inline-block;width:100%;">
+                          <input name="file" type="file" id="fileLogin" style="float:left;"  />
+                          <button type="button" id="btnUpLoadLogin" style="float:right;" class="layui-layer-btn0 btn btn-primary" onclick="uploadLogin();" >上传</button>
+                     </div>
+               </div>
+            </div>  
+        </div>
+    </div>
+</form>
+
